@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.hsq.myapp</groupId>
+    <artifactId>myapp-domain</artifactId>
+    <version>1.0.0</version>
+
+    <!--Java应用程序配置信息-->
+    <!--打包格式jar-->
+    <packaging>jar</packaging>
+    <!--项目名称-->
+    <name>everything-hsq</name>
+    <!--项目描述-->
+    <description>这是一个简洁版的Everything工具的java版本!</description>
+
+    <!--开发者信息-->
+    <developers>
+        <developer>
+            <id>0410</id>
+            <name>Hannah</name>
+            <email>13572826399@163.com</email>
+            <roles>
+                <role>Creator</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+
+    <!--Java属性信息-->
+    <properties>
+        <encoding>UTF-8</encoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+    </properties>
+
+    <!--程序依赖的jar-->
+    <dependencies>
+
+        <!--数据库相关的依赖，连接池，暂时使用MySQL，JDBC编程屏蔽了数据库的差异，后续切换到H2-->
+        <!--<dependency>-->
+            <!--<groupId>mysql</groupId>-->
+            <!--<artifactId>mysql-connector-java</artifactId>-->
+            <!--<version>5.1.47</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+        </dependency>
+        <!--由阿里巴巴开源的数据库连接池druid-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.13</version>
+        </dependency>
+        <!--加入lombok库-->
+        <dependency>
+            <groupId>org.projectLombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.6</version>
+        </dependency>
+    </dependencies>
+
+    <!--程序构建信息，编译、打包、依赖的插件-->
+    <!--
+        maven的功能都是通过插件完成的
+        1、plugin->多个goals
+        2、执行goal -> 绑定生命周期的某个阶段
+        3、plugin使用文件
+    -->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <!--配置主清单文件-->
+                    <!--主类，类路径前缀，告诉它打包后放到lib目录里面-->
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>everything.cmd.EverythingHsqCmdApplication</mainClass>
+                            <classpathPrefix>lib</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!--再来一个插件，执行器，将依赖拷贝到输出目录-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+
+                <executions>
+                    <execution>
+                        <id>copy-lib</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <outputDirectory> ${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+
+</project>
